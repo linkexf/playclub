@@ -1,0 +1,184 @@
+#{extends 'main.html' /}
+#{set title:'topic' /}
+
+
+<div id='sidebar'>
+    <div class='panel'>
+        <div class='header'>
+            <span class='col_fade'>作者</span>
+        </div>
+        <div class='inner'>
+            #{include '/CUser/card.html'/}
+        </div>
+    </div>
+</div>
+<div id='content'>
+    <div class='panel'>
+        <div class='header'>
+            <ul class='breadcrumb'>
+                <li><a href='/'>主页</a><span class='divider'>/</span></li>
+                <li class='active'>话题详情</li>
+            </ul>
+        </div>
+        <div class='inner'>
+            <h3>#{if topic.top}[置顶]#{/if} ${topic.title}</h3>
+            <div class='sep10'></div>
+            <div class='topic_content'>
+                #{verbatim}${topic.content}#{/verbatim}
+            </div>
+            <div class='sep10'></div>
+            #{if topic.tagList!=null && topic.tagList.size()>0}
+            <span class='col_fade'>标签:</span>
+            #{list topic.tagList, as:'tag'}
+            <span class='tag_in_topic' tag_id='${tag.id}'>
+	            <a href='/tag/${tag.name}'>${tag.name}</a>
+            </span>
+            #{/list}
+            #{/if}
+            #{else}
+            <span class='col_fade'>标签: 无</span>
+            #{/else}
+            <div class='sep5'></div>
+      <span class='col_fade'>
+        <a class='dark' href='/user/${topic.user.loginName}'>${topic.user.name}</a> 在 ${topic.createTime.format('yyyy-MM-dd hh:mm:ss')}发布
+      </span>
+
+
+            <span class='sp10'></span>
+            <a class='dark' id='share_weibo_btn' href="javascript:void((function(s,d,e,r,l,p,t,z,c){var%20f='http://v.t.sina.com.cn/share/share.php?appkey=<%= config.weibo_key %>',u=z||d.location,p=['&url=',e(u),'&title=',e(t||d.title),'&source=',e(r),'&sourceUrl=',e(l),'&content=',c||'gb2312','&pic=',e(p||'')].join('');function%20a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=440,height=430,left=',(s.width-440)/2,',top=',(s.height-430)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else%20a();})(screen,document,encodeURIComponent,'','','','分享来自<%= config.name %>的话题：<%= topic.title %>','',''));">分享到 weibo</a>
+
+            #{if current_user!=null}
+            #{if isCollect }
+            <button class='btn fr' id='collect_btn' action='un_collect'>取消收藏</button>
+            #{/if}
+            #{else}
+            <button class='btn btn-success fr' id='collect_btn' action='collect'>加入收藏</button>
+            #{/else}
+
+            #{if controllers.Authenticate.check()}
+            <span class='sp10'></span>
+            #{if topic.top}
+            <a href='/topic/${topic.id}/top/0'><img class='user_icon' src="@{'/public/images/star_fav_empty_icon&16.png'}" title='取消置顶' /></a>
+            #{/if}
+            #{else}
+            <a href='/topic/${topic.id}/top/1'><img class='user_icon' src="@{'/public/images/star_fav_icon&16.png'}" title='置顶' /></a>
+            #{/else}
+            <a href='/topic/${topic.id}/edit'><img class='user_icon' src="@{'/public/images/doc_edit_icon&16.png'}" title='编辑' /></a>
+            <a href='/topic/${topic.id}/delete' class='delete_topic_btn'><img class='user_icon' src="@{'/public/images/trash_icon&16.png'}" title='删除' /></a>
+            #{/if}
+            #{else}
+            #{if currentUser.id == topic.user.id}
+            <span class='sp10'></span>
+            <a href='/topic/${topic.id}/edit'><img class='user_icon' src="@{'/public/images/doc_edit_icon&16.png'}" title='编辑' /></a>
+            #{/if}
+            #{/else}
+            #{/if}
+        </div>
+    </div>
+    #{if replies.size > 0}
+    <div class='sep10'></div>
+    <div class='panel'>
+        <div class='header'>
+            <span class='col_fade'>${replies.size} 回复</span>
+        </div>
+        #{include '/CReply/reply.html'/}
+    </div>
+    #{/if}
+    #{if current_user!=null}
+    <div class='sep10'></div>
+    <div class='panel'>
+        <div class='header'>
+            <span class='col_fade'>添加回复</span>
+        </div>
+        <div class='inner'>
+            #{form @CReply.save()}
+            #{ifErrors}
+            <div class="alert alert-error" >
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <strong>#{error 'reply.content' /}</strong>
+            </div>
+            #{/ifErrors}
+                <div class='tabbable'>
+                    <div class='tab-content'>
+                        <div class='tab-pane active' id='markdown'>
+                            <div id='wmd-button-bar'></div>
+                            <textarea class='span8' id='wmd-input' name='reply.content' rows='8'></textarea>
+                        </div>
+                        <div id='preview' class='tab-pane'>
+                            <div id='wmd-preview' class='wmd-preview reply-wmd-preview'></div>
+                        </div>
+                    </div>
+                </div>
+                <input type='hidden' id='user_id' name='reply.userId' value='${currentUser.id}'/>
+                <input type='hidden' id='topic_id' name='reply.topicId' value='${topic.id}'/>
+                <div class='sep10'></div>
+                <button id='submit_btn' class='btn'>回复</button>
+                <span class='sp10'></span>
+                <span class='col_fade'>Ctrl+Enter 快捷回复</span>
+            #{/form}
+        </div>
+    </div>
+    #{/if}
+</div>
+#{if current_user!=null}
+<link type="text/css" rel="stylesheet" href="@{'public/stylesheets/kindeditor/default.css'}" />
+<script src="@{'/public/javascripts/kindeditor/lang/zh_CN.js'}"></script>
+<script src="@{'/public/javascripts/kindeditor/kindeditor.js'}"></script>
+<script>
+    var editor;
+    KindEditor.ready(function(K) {
+    editor = K.create('textarea[name="reply.content"]', {
+    resizeType : 1,
+    allowPreviewEmoticons : false,
+    allowImageUpload : false,
+    items : [
+    'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+    'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+    'insertunorderedlist', '|', 'table', 'emoticons', 'image', 'link', 'preview']
+    });
+    });
+
+
+ $('#collect_btn').click(function(){
+      var $me = $(this);
+      var action = $me.attr('action');
+      var data = {
+        topicId: '${topic.id}'
+      };
+      $.post('/topic/' + action, data, function(data) {
+        if (data.status === 'success') {
+          if (action == 'collect') {
+            $me.html('取消收藏');
+            $me.attr('action','un_collect');
+          } else {
+            $me.html('加入收藏');
+            $me.attr('action','collect');
+          }
+          $me.toggleClass('btn-success'); 
+        } 
+      }, 'json'); 
+    });
+
+    $('.reply_area').mouseover(function(){
+      $(this).find('.reply2_btn').show();
+    });
+    $('.reply_area').mouseout(function(){
+      $(this).find('.reply2_btn').hide();
+    });
+
+    $('.reply2_item').live('mouseover',function(){
+      $(this).find('.reply2_at_btn').show();
+    });
+    $('.reply2_item').live('mouseout',function(){
+      $(this).find('.reply2_at_btn').hide();
+    });
+
+    $('.reply2_btn').click(function () {
+      var $btn = $(this);
+      // var editor = $btn.parent().next('.reply2_area').find('.reply2_editor');
+      var editor = $btn.parent().parent().find('.reply2_editor');
+      editor.slideToggle('fast');
+      editor.find('textarea').focus();
+    });
+</script>
+#{/if}

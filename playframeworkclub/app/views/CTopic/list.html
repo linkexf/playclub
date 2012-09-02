@@ -1,0 +1,42 @@
+#{list topics, as:'topic'}
+<div class='cell'>
+    <div class='user_avatar'>
+        <a href='/user/${topic.user.loginName}'>
+            <img src='${topic.user.imageUrl}' title='${topic.user.name}' />
+        </a>
+    </div>
+    <div class='topic_wrap'>
+    <div class='title_wrap'>
+    <a class='topic_title' href='/topic/${topic.id}'>#{if topic.top}[置顶]#{/if} ${topic.title}</a>
+    </div>
+    #{if topic.replyCount>0}
+      <a class='count fr' href='/topic/${topic.id}#reply${topic.replyCount}'>${topic.replyCount}</a>
+    #{/if}
+    <div class='sep10'></div>
+    <div class='sep5'></div>
+    <span class='col_fade'>
+
+      <div class='click_part'>点击数:<span>${topic.visitCount}</span></div>
+      <div class='reply_part'>
+      #{if topic.lastReply }
+            <a class='dark' href='/user/${topic.reply.loginName}'>${topic.reply.name} </a> 回复于
+            ${topic.lastReplyTime.format('yyyy-MM-dd hh:mm:ss')}
+      #{/if}
+      #{else}
+            <a class='dark' href='/user/${topic.user.loginName}'>${topic.user.name} </a>
+            创建于 ${topic.createTime.format('yyyy-MM-dd hh:mm:ss')}
+      #{/else}
+      </div>
+    </span>
+    #{if topic.tagList&&topic.tagList.size>0 }
+    #{list topic.tagList, as:'tag'}
+    <span class='tag_in_abstract' tag_id='${tag.id}'>
+    	<a href='/tag/${tag.name}'><span class='tag_highlight'>${tag.name}</span></a>
+    </span>
+    #{/list}
+    #{/if}
+    </div>
+</div>
+#{/list}
+
+#{pager current_page:current_page, pages:total.page(Integer.parseInt(play.configuration.get("application.page"))) /}

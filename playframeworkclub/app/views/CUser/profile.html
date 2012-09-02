@@ -1,0 +1,133 @@
+#{extends 'main.html' /}
+#{set title:'profile' /}
+
+#{include '/sidebar.html'/}
+<div id='content'>
+    <div class='panel'>
+        <div class='header'>
+            <ul class='breadcrumb'>
+                <li><a href='/'>主页</a><span class='divider'>/</span></li>
+                <li class='active'>设置</li>
+            </ul>
+        </div>
+        <div class='inner'>
+            #{if flash.success != null}
+            <div class="alert alert-success">
+                <strong>${flash.success}</strong>
+            </div>
+            #{/if}
+            #{if flash.error != null}
+            <div class="alert alert-error">
+                <strong>${flash.error}</strong>
+            </div>
+            #{/if}
+            #{form @CUser.update()}
+            <input type='hidden' name='user.id' value='${user.id}' />
+            <div class='control-group'>
+                <label class='control-label' for='user.loginName'>用户名</label>
+                <div class='controls'>
+                    <input class='input-xlarge readonly' id='user.loginName' name='user.loginName' size='30' type='text' readonly='true' value='${user.loginName}' />
+                </div>
+            </div>
+                <div class='control-group'>
+                    <label class='control-label' for='email'>电子邮件</label>
+                    <div class='controls'>
+                        <input class='input-xlarge readonly' id='email' name='email' size='30' type='text' readonly='true' value='${user.email}' />
+                    </div>
+                </div>
+            <div class='control-group'>
+                <label class='control-label' for='user.name'>昵称</label>
+                <div class='controls'>
+                    <input class='input-xlarge' id='user.name' name='user.name' size='30' type='text' value='${user.name}' />
+                </div>
+            </div>
+                <div class='control-group'>
+                    <label class='control-label' for='user.url'>个人网站</label>
+                    <div class='controls'>
+                        <input class='input-xlarge' id='user.url' name='user.url' size='30' type='text' value='${user.url}' />
+                    </div>
+                </div>
+                <div class='control-group'>
+                    <label class='control-label' for='user.location'>所在地点</label>
+                    <div class='controls'>
+                        <input class='input-xlarge' id='user.location' name='user.location' size='30' type='text' value='${user.location}' />
+                    </div>
+                </div>
+                <div class='control-group'>
+                    <label class='control-label' for='user.signature'>个性签名</label>
+                    <div class='controls'>
+                        <input class='input-xlarge' id='user.signature' name='user.signature' size='30' type='text' value='${user.signature}' />
+                    </div>
+                </div>
+                <div class='control-group'>
+                    <label class='control-label' for='user.profile'>个人简介</label>
+                    <div class='controls'>
+                        <textarea class='input-xlarge' id='user.profile' name='user.profile' rows='4'>${user.profile}</textarea>
+                    </div>
+                </div>
+                <div class='control-group'>
+                    <label class='control-label' for='user.weibo'>微博</label>
+                    <div class='controls'>
+                        <input class='input-xlarge' id='user.weibo' name='user.weibo' size='30' type='text' value='${user.weibo}' />
+                    </div>
+                </div>
+                <div class='control-group'>
+                    <label class='control-label' for='receiveMail'>邮件提醒</label>
+                    <div class='controls'>
+                        <label class='checkbox'>
+                            #{if user.receiveMail }
+                            <input type='checkbox' id='receiveMail' name='receiveMail' checked='checked' />
+                            #{/if}
+                            #{else}
+                            <input type='checkbox' id='noReceiveMail' name='receiveMail'/>
+                            #{/else}
+                            我被别人@时,我的话题收到回复时.
+                        </label>
+                    </div>
+                </div>
+                <div class='form-actions'>
+                    <input type='submit' class='btn' value='保存设置' />
+                </div>
+            #{/form}
+        </div>
+    </div>
+    <div class='sep10'></div>
+    <div class='panel'>
+        <div class='header'>
+            <span class='col_fade'>头像</span>
+        </div>
+        <div class='inner'>
+            <p>使用<a href='http://en.wikipedia.org/wiki/Gravatar' target='_blank'> Globally Recognized Avata </a>，与您的 Email 关联，请在<a href='http://en.gravatar.com/' target='_blank'> Gravatar </a>注册或更改您的头像。</p>
+            <p>您当前的头像如下：</p>
+            <img src='${user.imageUrl}' />
+        </div>
+    </div>
+    <div class='sep10'></div>
+    <div class='panel'>
+        <div class='header'>
+            <span class='col_fade'>更改密码</span>
+        </div>
+        <div class='inner'>
+            <div class='sep10'></div>
+            #{form @CUser.restPass()}
+                <div class='control-group'>
+                    <label class='control-label' for='oldPassword'>当前密码</label>
+                    <div class='controls'>
+                        <input class='input-xlarge' type='password' id='oldPassword' name='oldPassword' size='30' value="${flash.oldPassword}"/>
+                        <span class="alert-error">#{error 'oldPassword' /}</span>
+                    </div>
+                </div>
+                <div class='control-group'>
+                    <label class='control-label' for='newPassword'>新密码</label>
+                    <div class='controls'>
+                        <input class='input-xlarge' type='password' id='newPassword' name='newPassword' size='30' value="${flash.newPassword}"/>
+                        <span class="alert-error">#{error 'newPassword' /}</span>
+                    </div>
+                </div>
+                <div class='form-actions'>
+                    <input type='submit' class='btn' value='更改密码' />
+                </div>
+            #{/form}
+        </div>
+    </div>
+</div>

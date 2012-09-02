@@ -1,0 +1,22 @@
+#{list reply.childReplies, as:'childReply'}
+<div class='cell reply2_item' reply_id='${reply.id}'>
+    <div class='user_avatar'>
+        <a href='/user/${childReply.user.loginName}'><img src='${childReply.user.imageUrl}' title='${childReply.user.name}' /></a>
+    </div>
+
+    <span class='fr'>
+		#{if current_user!=null }
+			<a href='javascript:void(0);' class='dark reply2_at_btn'>@回复</a>
+		#{/if}
+    </span>
+
+    <span class='reply_author'><a class='dark' href='/user/${childReply.user.loginName}'>${childReply.user.name}</a></span>
+	<span class='col_fade'>
+			在 ${childReply.createTime.format('yyyy-MM-dd hh:mm:ss')} 前回复
+    </span>
+    <!-- <div class='sep5'></div> -->
+    <div class='reply_content'>
+        #{verbatim}${childReply.content}#{/verbatim}
+    </div>
+</div>
+#{/list}

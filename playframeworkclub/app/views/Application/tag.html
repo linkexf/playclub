@@ -1,0 +1,62 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+#{include '/sidebar.html'/}
+
+<div id='content'>
+    <div class='panel'>
+        <div class='header'>
+            <ul class='breadcrumb'>
+                <li><a href='/'>主页</a><span class='divider'>/</span></li>
+                <li class='active'>${tag.name}</li>
+            </ul>
+            <div class='sep5'></div>
+            <span class='col_fade'>${tag.description}</span>
+
+            #{if current_user!=null}
+            <div class='sep10'></div>
+            <div class='sep10'></div>
+            <a href='/topic/create'><button class='btn' id='create_topic_btn'>发布话题</button></a>
+
+            #{if isCollect}
+            <button class='btn fr' id='collect_btn' action='un_collect'>取消收藏</button>
+            #{/if}
+            #{else}
+            <button class='btn btn-success fr' id='collect_btn' action='collect'>加入收藏</button>
+            #{/else}
+            #{/if}
+        </div>
+
+        #{if topics.size>0}
+        #{include '/CTopic/list.html'/}
+        #{/if}
+        #{else}
+        <div class='inner'>
+            <p>无话题</p>
+        </div>
+        #{/else}
+    </div>
+</div>
+
+#{if current_user!=null}
+<script type='text/javascript'>
+  $('#collect_btn').click(function() {
+    var $me = $(this);
+    var action = $me.attr('action');
+    var data = {
+      tagId: '${tag.id}'
+    };
+    $.post('/tag/' + action, data, function(data) {
+      if (data.status === 'success') {
+        if (action === 'collect') {
+          $me.html('取消收藏');
+          $me.attr('action','un_collect');
+        } else {
+          $me.html('加入收藏');
+          $me.attr('action','collect');
+        }
+        $me.toggleClass('btn-success'); 
+      } 
+    }, 'json'); 
+  });
+</script>
+#{/if}

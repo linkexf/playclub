@@ -1,0 +1,20 @@
+<div id='sidebar'>
+    <div class='panel'>
+        #{if current_user!=null}
+        <div class='inner'>
+            #{include '/CUser/card.html'/}
+        </div>
+        #{/if}
+        #{else}
+        <div class='inner'>
+            <p>Playframework中文社区</p>
+            <div class='sep10'></div>
+            <div class='cen'>
+                <a href='/register'><button class='btn'>现在注册</button></a>
+                <div class='sep10'></div>
+                <span>已注册用户请<a class='light' href='/login'> 登录</a></span>
+            </div>
+        </div>
+        #{/else}
+    </div>
+</div>

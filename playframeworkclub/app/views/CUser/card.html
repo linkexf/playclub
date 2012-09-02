@@ -1,0 +1,53 @@
+#{if currentUser!=null }
+#{set currentUser:currentUser /}
+#{/if}
+#{else}
+#{set currentUser:user /}
+#{/else}
+<div class='user_card'>
+    <div>
+        <a href='/user/${currentUser.loginName}'><img class='user_avatar' src='${currentUser.imageUrl}' title='${currentUser.name}' /></a>
+        <span class='sp10'></span>
+        <span class='user_name'><a class='dark' href='/user/${currentUser.loginName}'>${currentUser.name}</a></span>
+        #{if current_user!=null && current_user!=currentUser.loginName}
+        #{if isFollow}
+        <button class='btn fr' id='follow_btn' action='un_follow'>取消关注</button>
+        #{/if}
+        #{else}
+        <button class='btn btn-success fr' id='follow_btn' action='follow'>加入关注</button>
+        #{/else}
+        #{/if}
+        <div class='board cl'>
+            <div class='floor'><a href='/my/tags/'><span class='big'>${currentUser.collectTagCount}</span> 标签收藏</a> &nbsp; &nbsp;
+                <a href='/my/topics'><span class='big'>${currentUser.collectTopicCount}</span> 话题收藏</a></div>
+            <div class='floor'>
+                <a href='/my/following'><span class='big'>${currentUser.followingCount}</span> 关注</a> &nbsp; &nbsp;
+                <a href='/my/follower'><span class='big'>${currentUser.followerCount}</span> 粉丝</a> &nbsp; &nbsp;
+                <span class='big'>${currentUser.score}</span> 积分
+            </div>
+        </div>
+    </div>
+</div>
+ #{if current_user!=null && current_user!=currentUser.loginName}
+<script>
+        $('#follow_btn').click(function(){
+            var $me = $(this);
+            var action = $me.attr('action');
+            var params = {
+                id: '${user.id}'
+            };
+            $.post('/user/' + action, params, function(data) {
+                if (data.status === 'success') {
+                    if (action === 'follow') {
+                        $me.html('取消关注');
+                        $me.attr('action','un_follow');
+                    } else {
+                        $me.html('加入关注');
+                        $me.attr('action','follow');
+                    }
+                    $me.toggleClass('btn-success'); 
+                }   
+            }, 'json'); 
+        });
+</script>
+#{/if}

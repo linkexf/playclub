@@ -1,0 +1,58 @@
+#{list replies, as:'reply'}
+<div class='cell reply_area reply_item' id='reply${replies.indexOf(reply)+1}' reply_id='${reply.id}'>
+    <div class='user_avatar'>
+        <a href='/user/${reply.user.loginName}'><img src='${reply.user.imageUrl}' title='${reply.user.name}' /></a>
+    </div>
+    <span class='col_fade fr'>#${replies.indexOf(reply)+1}</span>
+
+    <span class='fr'>
+		#{if current_user!=null }
+			<a href='javascript:void(0);' class='dark reply2_btn'>回复</a>
+		#{/if}
+		#{if reply.childReplies.size()>0}
+			<span class='col_fade'>{${reply.childReplies.size()}}</span>
+		#{/if}
+    </span>
+
+    <span class='reply_author'><a class='dark' href='/user/${reply.user.loginName}'>${reply.user.name}</a></span>
+	<span class='col_fade'>
+			在 ${reply.createTime.format('yyyy-MM-dd hh:mm:ss')} 前回复
+    </span>
+    <!-- <div class='sep5'></div> -->
+    <div class='reply_content'>
+        #{verbatim}${reply.content}#{/verbatim}
+    </div>
+    <div class='cl'>
+        <!-- <div class='sep5'></div> -->
+        <div class='reply2_area'>
+            #{if reply.childReplies.size()>0 }
+            <div class='sep10'></div>
+            #{include '/CReply/reply2.html'/}
+            #{/if}
+            #{form @CReply.saveReply()}
+            <div class='reply2_editor tabbable' id='reply2_editor-${reply.id}'>
+                <div class='sep10'></div>
+                <div class='tab-content'>
+                    <div class='tab-pane active' id='markdown-${reply.id}'>
+                        <div id='wmd-button-bar-${reply.id}'></div>
+                        <textarea class='span8' id='wmd-input-${reply.id}' name='rReply.content' rows='4'></textarea>
+                    </div>
+                    <div id='preview-${reply.id}' class='tab-pane'>
+                        <div id='wmd-preview-${reply.id}' class='wmd-preview reply-wmd-preview'></div>
+                    </div>
+                </div>
+                <input type='hidden' id='reply_id' name='rReply.replyId' value='${reply.id}'/>
+                <input type='hidden' id='user_id' name='rReply.userId' value='${currentUser.id}'/>
+                <input type='hidden' id='topic_id' name='rReply.topicId' value='${topic.id}'/>
+                <div class='sep10'></div>
+                <button id='submit_btn' class='btn'>回复</button>
+                <span class='sp10'></span>
+                <span class='col_fade'>Ctrl+Enter 快捷回复</span>
+            </div>
+            #{/form}
+
+
+        </div>
+    </div>
+</div>
+#{/list}

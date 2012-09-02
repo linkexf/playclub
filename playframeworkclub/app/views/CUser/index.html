@@ -1,0 +1,129 @@
+#{extends 'main.html' /}
+#{set title:user.loginName /}
+
+#{include '/sidebar.html'/}
+
+<div id='content'>
+    <div class='panel'>
+        <div class='header'>
+            <ul class='breadcrumb'>
+                <li><a href='/'>主页</a><span class='divider'>/</span></li>
+                <li class='active'>${user.loginName}</li>
+            </ul>
+        </div>
+        <div class='inner'>
+            <div class='user_big_avatar'>
+                <img src='${user.imageUrl}' title='${user.name}' />
+            </div>
+
+            #{if current_user!=null && current_user!=user.loginName}
+            #{if isFollow}
+            <button class='btn fr' id='follow_btn' action='un_follow'>取消关注</button>
+            #{/if}
+            #{else}
+            <button class='btn btn-success fr' id='follow_btn' action='follow'>加入关注</button>
+            #{/else}
+            #{/if}
+
+            <h2>${user.name}</h2>
+            <div class='col_fade'>
+                <span><img src="@{'/public/images/cert_icon&16.png'}" /> ${user.followingCount} 关注  |  ${user.followerCount} 粉丝  | ${user.score} 积分</span>
+                #{if user.signature!=null}
+                <span class='sp10'></span>
+                <span>${user.signature}</span>
+                #{/if}
+            </div>
+            <div class='user_profile'>
+                <ul class='unstyled'>
+                    #{if user.url!=null}
+                    <li>
+                        <img class='user_icon' src="@{'/public/images/paper_airplane_icon&16.png'}" />
+                        <a class='dark' href='${user.url}' target='_blank'>${user.url}</a>
+                    </li>
+                    #{/if}
+                    #{if user.location!=null}
+                    <li>
+                        <img class='user_icon' src="@{'/public/images/compass_icon&16.png'}" />
+                        <span class='col_fade'>${user.location}</span>
+                    </li>
+                    #{/if}
+                    #{if user.url!=null}
+                    <li>
+                        <img class='user_icon' src="@{'/public/images/twitter_2_icon&16.png'}" />
+                        <a class='dark' href='${user.weibo}' target='_blank'>${user.weibo}</a>
+                    </li>
+                    #{/if}
+                </ul>
+                #{if user.profile!=null}
+                <p>${user.profile}</p>
+                #{/if}
+            </div>
+            <p class='col_fade'>于 ${user.createTime.format('yyyy-MM-dd hh:mm:ss')} 加入</p>
+            #{secure.check}
+            #{if user.isStar}
+            <button class='btn fr' id='set_star_btn' action='un_star'>取消达人</button>
+            #{/if}
+            #{else}
+            <button class='btn btn-danger fr' id='set_star_btn' action='set_star'>设为达人</button>
+            #{/else}
+            #{/secure.check}
+            <br/>
+            <br/>
+        </div>
+    </div>
+    <div class='sep10'></div>
+    <div class='panel'>
+        <div class='header'>
+            <span class='col_fade'>最近发布话题</span>
+        </div>
+    </div>
+    <div class='sep10'></div>
+    <div class='panel'>
+        <div class='header'>
+            <span class='col_fade'>最近参与话题</span>
+        </div>
+    </div>
+</div>
+
+<script type='text/javascript'>
+
+        $('#follow_btn').click(function(){
+            var $me = $(this);
+            var action = $me.attr('action');
+            var params = {
+                id: '${user.id}'
+            };
+            $.post('/user/' + action, params, function(data) {
+                if (data.status === 'success') {
+                    if (action === 'follow') {
+                        $me.html('取消关注');
+                        $me.attr('action','un_follow');
+                    } else {
+                        $me.html('加入关注');
+                        $me.attr('action','follow');
+                    }
+                    $me.toggleClass('btn-success'); 
+                }   
+            }, 'json'); 
+        });
+
+        $('#set_star_btn').click(function() {
+            var $me = $(this);
+            var action = $me.attr('action');
+            var params = {
+                id: '${user.id}'
+            };
+            $.post('/user/'+action, params, function(data) {
+                if (data.status === 'success') {
+                    if (action === 'set_star') {
+                        $me.html('取消达人');
+                        $me.attr('action','un_star');
+                    } else {
+                        $me.html('设为达人');
+                        $me.attr('action','set_star');
+                    }
+                    $me.toggleClass('btn-danger'); 
+                }
+            }, 'json'); 
+        });
+</script>

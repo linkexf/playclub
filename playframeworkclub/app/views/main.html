@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>#{get 'title' /}</title>
+        <meta charset="${_response_encoding}">
+        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
+        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/bootstrap.css'}">
+        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/style.css'}">
+        #{get 'moreStyles' /}
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <script src="@{'/public/javascripts/jquery-1.7.1.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/bootstrap.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        <script src="@{'/public/javascripts/main.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+        #{get 'moreScripts' /}
+    </head>
+    <body>
+    <!-- navbar -->
+    <div class='navbar'>
+        <div class='navbar-inner'>
+            <div class='container'>
+                <a class='brand' href='/'>Play!Club</a>
+                <form id='search_form' class='navbar-search' action="/">
+                    <input type='text' id='q' name='q' class='search-query span3' value=''/>
+                </form>
+                <ul class='nav pull-right'>
+                    <li><a href='/'>首页</a></li>
+
+                    <li><a href="/about" target="">关于我们</a></li>
+
+                    <li class='divider-vertical'></li>
+                    #{if current_user!=null}
+                    <li><a href='@{CUser.profile()}'>设置</a></li>
+                    <li><a href='@{Application.logout()}'>退出</a></li>
+                    #{/if}
+                    #{else}
+                    <li><a href='@{Application.register()}'>注册</a></li>
+                    <li><a href='@{Application.login()}'>登录</a></li>
+                    #{/else}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- wrapper -->
+    <div id='wrapper'>
+        <div id='main'>
+            #{doLayout /}
+        </div>
+        <div class='cl cr'></div>
+    </div>
+
+    <div id='backtotop'>回到顶部</div>
+    <!-- footer -->
+    <div id='footer'>
+        <div id='footer_main'>
+            <div class='fr'>
+            </div>
+            <div>
+                <strong><a class='dark' href='/about'>关于</a></strong>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <strong><a class='dark' href='https://github.com/cnodejs/nodeclub/' target="_blank">Github</a></strong>
+            </div>
+            <div class='sep10'></div>
+            <div class='col_fade'>
+                &copy; 2012 <br>本社区为开源系统，版本: 0.1 ，欢迎贡献代码<br>
+
+            </div>
+        </div>
+    </div>
+
+    </body>
+</html>

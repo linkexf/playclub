@@ -1,0 +1,60 @@
+<div class='pagination' current_page='${_current_page}'>
+    <ul>
+        %{
+        pages=_pages;
+        current_page=_current_page;
+        base = request.path
+        base_url= base + (base.indexOf('?') < 0 ? '?' : '&') + 'page=';
+        }%
+        #{if current_page == 1}
+        <li class='disabled'><a>«</a></li>
+        #{/if}
+        #{else}
+        <li><a href='${base_url}1'>«</a></li>
+        #{/else}
+
+        %{
+        page_start = current_page - 2 > 0 ? current_page - 2 : 1;
+        page_end = page_start + 4 >= pages ? pages : page_start + 4;
+        }%
+
+        #{if page_start > 1}
+        <li><a>...</a></li>
+        #{/if}
+        #{list items:page_start..page_end, as:'i'}
+        #{if i==current_page}
+        <li class='disabled'><a>${i}</a></li>
+        #{/if}
+        #{else}
+        <li><a href='${base_url+i}'>${i}</a></li>
+        #{/else}
+        #{/list}
+
+        #{if page_end < pages}
+        <li><a>...</a></li>
+        #{/if}
+
+        #{if current_page == pages}
+        <li class='disabled'><a>»</a></li>
+        #{/if}
+        #{else}
+        <li><a href='${base_url+i}'>»</a></li>
+        #{/else}
+    </ul>
+</div>
+<script type='text/javascript'>
+    $(document).ready(function(){
+    var $nav = $('.pagination');
+    var current_page = $nav.attr('current_page');
+    if (current_page) {
+    $nav.find('li').each(function(){
+    var $li = $(this);
+    var $a = $li.find('a');
+    if($a.html() == current_page){
+    $li.addClass('active');
+    $a.removeAttr('href');
+    }
+    });
+    }
+    });
+</script>

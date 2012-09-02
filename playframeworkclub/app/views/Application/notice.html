@@ -1,0 +1,29 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+
+<div id='content'>
+    <div class='panel'>
+        <div class='header'>
+            <ul class='breadcrumb'>
+                <li><a href='/'>主页</a><span class='divider'>/</span></li>
+                <li class='active'>提示</li>
+            </ul>
+        </div>
+
+        <div class='inner'>
+            <div class='sep10'></div>
+            <div class='sep10'></div>
+            #{if flash.success != null}
+            <div class="alert alert-success">
+                <strong>${flash.success}</strong>
+            </div>
+            #{/if}
+            #{if flash.error != null}
+            <div class="alert alert-error">
+                <strong>${flash.error}</strong>
+            </div>
+            #{/if}
+        </div>
+    </div>
+</div>

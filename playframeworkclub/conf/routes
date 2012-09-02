@@ -1,0 +1,46 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                       Application.index
+GET     /register                               Application.register
+GET     /login                                  Application.login
+GET     /forgetPass                             Application.forgetPass
+GET     /active/{a}                             Application.active
+GET     /logout                                 Application.logout
+GET     /rest_password/{a}                      Application.restPass
+GET     /about                                  Application.about
+
+
+
+GET     /user/profile                           CUser.profile
+GET     /user/{loginName}                       CUser.index
+POST    /user/set_star                          CUser.setStar
+POST    /user/un_star                           CUser.cancelStar
+GET     /user/card                              CUser.card
+POST    /user/follow                            CUser.follow
+POST    /user/un_follow                         CUser.cancelFollow
+
+GET     /tag/{name}/delete                      CTag.delete
+GET     /tag/create                             CTag.create
+GET     /tag/edit                               CTag.edit
+POST    /tag/collect                            CTag.collect
+POST    /tag/un_collect                         CTag.cancelCollect
+GET     /tag/{name}                             Application.tag
+
+GET     /topic/create                           CTopic.create
+GET     /topic/{topicId}                        CTopic.index
+POST    /topic/collect                          CTopic.collect
+POST    /topic/un_collect                       CTopic.cancelCollect
+
+
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}

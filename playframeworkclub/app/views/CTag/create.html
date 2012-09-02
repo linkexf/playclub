@@ -1,0 +1,127 @@
+#{extends 'main.html' /}
+#{set title:'tag' /}
+<!-- wrapper -->
+
+<div id='content'>
+    <div class='panel'>
+        <div class='header'>
+            <span class='col_fade'>所有标签</span>
+        </div>
+        <div class='inner'>
+            #{if tags.size>0}
+            <table class='table'>
+                <thead>
+                <th>序号</th>
+                <th>名字</th>
+                <th>编辑</th>
+                <th>删除</th>
+                </thead>
+                <tbody>
+                #{list tags,as:'tag'}
+                <tr>
+                    <td>${tag.order}</td>
+                    <td id="tag_name">${tag.name}</td>
+                    <td>
+                        <a href='#tag_edit' class='edit_btn' id="${tag.name}"><img class='user_icon' src="@{'/public/images/doc_edit_icon&16.png'}" title='编辑' /></a>
+                    </td>
+                    <td>
+                        <a class='delete_tag_btn' href="/tag/${tag.name}/delete"><img class='user_icon' src="@{'/public/images/trash_icon&16.png'}" title='删除' /></a>
+                    </td>
+
+                </tr>
+                #{/list}
+                </tbody>
+            </table>
+            #{/if}
+            #{else}
+            <p>无标签</p>
+            #{/else}
+        </div>
+    </div>
+    <div class='sep10'></div>
+    <div class='panel' id="tag_edit">
+        <div class='header'>
+            <span class='col_fade tag_edit'>添加标签</span>
+        </div>
+        <div class='inner'>
+            <div class='sep10'></div>
+            <div class='sep10'></div>
+            #{if flash.success != null}
+            <div class="alert alert-success">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <strong>${flash.success}</strong>
+            </div>
+            #{/if}
+            #{if flash.error != null}
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <strong>${flash.error}</strong>
+            </div>
+            #{/if}
+            #{form @CTag.save()}
+            <div class='control-group'>
+                <label class='control-label' for='name'>名称</label>
+                <div class='controls'>
+                    <input class='input-xlarge' id='name' name='tag.name' size='30' type='text' value="${flash['tag.name']}" />
+                    <span class="alert-error">#{error 'tag.name' /}</span>
+                </div>
+            </div>
+            <div class='control-group'>
+                <label class='control-label' for='description'>描述</label>
+                <div class='controls'>
+                    <input class='input-xlarge' id='description' name='tag.description' size='30' type='text' value="${flash['tag.description']}" />
+                    <span class="alert-error">#{error 'tag.description' /}</span>
+                </div>
+            </div>
+            <div class='control-group'>
+                <label class='control-label' for='background'>背景图片</label>
+                <div class='controls'>
+                    <input class='input-xlarge' id='background' name='tag.background' size='30' type='text' value="${flash['tag.background']}" />
+                    <span class="alert-error">#{error 'tag.background' /}</span>
+                </div>
+            </div>
+            <div class='control-group'>
+                <label class='control-label' for='order'>排序</label>
+                <div class='controls'>
+                    <input class='input-xlarge' id='order' name='tag.order' size='30' type='text' value="${flash['tag.order']}" />
+                    <span class="alert-error">#{error 'tag.order' /}</span>
+                </div>
+            </div>
+            <input type='hidden' id='id' name='tag.id' value="${flash['tag.id']}"/>
+            <div class='form-actions'>
+                <input type='submit' class='btn' value='保存' />
+            </div>
+            #{/form}
+        </div>
+    </div>
+</div>
+<script>
+function del(name) {
+    alert(name)
+    $.ajax({
+    type: "DELETE",
+    url: "@{CTag.delete()}",
+    data: {
+      name:name
+    }
+   });
+}
+
+ $('.edit_btn').click(function () {
+      var $btn = $(this);
+      var data = {
+        tagName: $btn.attr("id")
+      };
+      $.get('/tag/edit', data, function(data) {
+        if (data) {
+            $('#id').val(data.id);
+            $('#name').val(data.name);
+            $('#description').val(data.description);
+            $('#background').val(data.background);
+            $('#order').val(data.order);
+            $('.tag_edit').text("编辑标签"); 
+        };
+
+      }, 'json');
+ });
+</script>
